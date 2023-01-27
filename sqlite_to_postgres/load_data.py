@@ -19,17 +19,24 @@ load_dotenv(dotenv_path)
 
 def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
     """Основной метод загрузки данных из SQLite в Postgres."""
+    tables_sqlite = [
+        'film_work', 'genre', 'person',
+        'genre_film_work', 'person_film_work',
+    ]
     sqlite_extractor = SQLiteExtractor(connection)
     postgres_saver = PostgresSaver(pg_conn)
-
-    data_movies, data_persons, data_genres, data_genre_film_work, data_person_film_work = \
-        sqlite_extractor.extract_data()
-
-    postgres_saver.save_film_work_to_postgres(data_movies)
-    postgres_saver.save_genre_to_postgres(data_genres)
-    postgres_saver.save_person_to_postgres(data_persons)
-    postgres_saver.save_genre_film_work_to_postgres(data_genre_film_work)
-    postgres_saver.save_person_film_work_to_postgres(data_person_film_work)
+    for table in tables_sqlite:
+        data = sqlite_extractor.get_data_from_sqlite(table)
+        if table == 'film_work':
+            postgres_saver.save_film_work_to_postgres(data)
+        elif table == 'genre':
+            postgres_saver.save_genre_to_postgres(data)
+        elif table == 'person':
+            postgres_saver.save_person_to_postgres(data)
+        elif table == 'genre_film_work':
+            postgres_saver.save_genre_film_work_to_postgres(data)
+        elif table == 'person_film_work':
+            postgres_saver.save_person_film_work_to_postgres(data)
 
 
 if __name__ == '__main__':

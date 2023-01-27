@@ -1,7 +1,6 @@
 import psycopg2
-from data_structure import (
-    FilmWork, Genre, GenreFilmWork, Person, PersonFilmWork,
-)
+
+from sqlite_to_postgres.data_structure import FilmWork, Genre, GenreFilmWork, Person, PersonFilmWork
 
 
 class PostgresSaver:
@@ -48,6 +47,7 @@ class PostgresSaver:
         cursor.execute(f"""
                INSERT INTO content.genre_film_work (id, film_work_id, genre_id, created)
                VALUES {args}
+               ON CONFLICT (id) DO NOTHING;
                """)
 
     def save_person_film_work_to_postgres(self, person_film_work: PersonFilmWork):
@@ -59,3 +59,8 @@ class PostgresSaver:
                INSERT INTO content.person_film_work (id, film_work_id, person_id, role, created)
                VALUES {args}
                """)
+
+    def get_data_from_postgres(self, table):
+        cursor = self.pg_conn.cursor()
+        cursor.execute(f'SELECT * FROM {table};')
+        return cursor.fetchall()
