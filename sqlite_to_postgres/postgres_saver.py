@@ -11,10 +11,10 @@ class PostgresSaver:
         cursor = self.pg_conn.cursor()
         cursor.execute("""TRUNCATE content.film_work CASCADE;""")
 
-        args = ','.join(cursor.mogrify('(%s, %s, %s, %s, %s, %s, %s, %s, %s)', item).decode() for item in film_work)
-        cursor.execute(f"""
-            INSERT INTO content.film_work (
-            id, title, description, creation_date, file_path, rating, type, created, modified
+        args = ','.join(cursor.mogrify('(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', item).decode() for item in film_work)
+        cursor.execute(
+            f"""INSERT INTO content.film_work (
+            id, title, description, creation_date, rating, type, created, modified, certificate, file_path
             )
             VALUES {args}
             """)
@@ -33,9 +33,9 @@ class PostgresSaver:
         cursor = self.pg_conn.cursor()
         cursor.execute("""TRUNCATE content.person CASCADE;""")
 
-        args = ','.join(cursor.mogrify('(%s, %s, %s, %s)', item).decode() for item in person)
+        args = ','.join(cursor.mogrify('(%s, %s, %s, %s, %s)', item).decode() for item in person)
         cursor.execute(f"""
-               INSERT INTO content.person (id, full_name, created, modified)
+               INSERT INTO content.person (id, full_name, created, modified, gender)
                VALUES {args}
                """)
 
@@ -45,7 +45,7 @@ class PostgresSaver:
 
         args = ','.join(cursor.mogrify('(%s, %s, %s, %s)', item).decode() for item in genre_film_work)
         cursor.execute(f"""
-               INSERT INTO content.genre_film_work (id, film_work_id, genre_id, created)
+               INSERT INTO content.genre_film_work (id, genre_id, film_work_id, created)
                VALUES {args}
                ON CONFLICT (id) DO NOTHING;
                """)
@@ -56,7 +56,7 @@ class PostgresSaver:
 
         args = ','.join(cursor.mogrify('(%s, %s, %s, %s, %s)', item).decode() for item in person_film_work)
         cursor.execute(f"""
-               INSERT INTO content.person_film_work (id, film_work_id, person_id, role, created)
+               INSERT INTO content.person_film_work (id, person_id, film_work_id, role, created)
                VALUES {args}
                """)
 

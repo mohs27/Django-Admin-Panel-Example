@@ -72,6 +72,8 @@ class GenreFilmwork(UUIDMixin):
 
     class Meta:
         db_table = "content\".\"genre_film_work"
+        verbose_name = _('Filmwork Genre')
+        verbose_name_plural = _('Filmwork Genres')
 
 
 class Gender(models.TextChoices):
@@ -100,3 +102,5 @@ class PersonFilmwork(UUIDMixin):
 
     class Meta:
         db_table = "content\".\"person_film_work"
+        verbose_name = _('Filmwork Person')
+        verbose_name_plural = _('Filmwork Persons')

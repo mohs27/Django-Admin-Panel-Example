@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-27 15:06+0300\n"
+"POT-Creation-Date: 2023-01-27 22:16+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\venv\Lib\site-packages\_pytest\config\argparsing.py:474
+#, python-format
+msgid "ambiguous option: %(option)s could match %(matches)s"
+msgstr ""
 
 #: .\venv\Lib\site-packages\django\contrib\messages\apps.py:15
 msgid "Messages"
@@ -1269,50 +1274,66 @@ msgstr ""
 msgid "creation_date"
 msgstr ""
 
-#: .\movies\models.py:53
+#: .\movies\models.py:54
 msgid "type"
 msgstr ""
 
-#: .\movies\models.py:55
+#: .\movies\models.py:56
 msgid "certificate"
 msgstr ""
 
-#: .\movies\models.py:56
+#: .\movies\models.py:57
 msgid "file"
 msgstr ""
 
-#: .\movies\models.py:60
+#: .\movies\models.py:61
 msgid "Filmwork"
 msgstr ""
 
-#: .\movies\models.py:61
+#: .\movies\models.py:62
 msgid "Filmworks"
 msgstr ""
 
-#: .\movies\models.py:77
+#: .\movies\models.py:75
+msgid "Filmwork Genre"
+msgstr ""
+
+#: .\movies\models.py:76
+msgid "Filmwork Genres"
+msgstr ""
+
+#: .\movies\models.py:80
 msgid "male"
 msgstr ""
 
-#: .\movies\models.py:78
+#: .\movies\models.py:81
 msgid "female"
 msgstr ""
 
-#: .\movies\models.py:82
+#: .\movies\models.py:85
 msgid "full_name"
 msgstr ""
 
-#: .\movies\models.py:83
+#: .\movies\models.py:86
 msgid "gender"
 msgstr ""
 
-#: .\movies\models.py:87
+#: .\movies\models.py:90
 msgid "Person"
 msgstr ""
 
-#: .\movies\models.py:88
+#: .\movies\models.py:91
 msgid "Persons"
 msgstr ""
 
-#: .\movies\models.py:97
+#: .\movies\models.py:100
 msgid "role"
+msgstr ""
+
+#: .\movies\models.py:105
+msgid "Filmwork Person"
+msgstr ""
+
+#: .\movies\models.py:106
+msgid "Filmwork Persons"
 msgstr ""
