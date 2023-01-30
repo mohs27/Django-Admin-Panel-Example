@@ -11,10 +11,14 @@ class GenreAdmin(admin.ModelAdmin):
 
 class GenreFilmworkInline(admin.TabularInline):
     model = GenreFilmwork
+    list_display = ('genre',)
+    autocomplete_fields = ('genre',)
 
 
 class PersonFilmworkInline(admin.TabularInline):
     model = PersonFilmwork
+    autocomplete_fields = ('person',)
+    list_display = ('person',)
 
 
 @admin.register(Filmwork)

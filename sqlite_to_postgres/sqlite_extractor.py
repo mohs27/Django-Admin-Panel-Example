@@ -1,20 +1,14 @@
 
-import sqlite3
-from contextlib import contextmanager
-
-
 class SQLiteExtractor:
 
     def __init__(self, conn):
         self.conn = conn
 
-    @contextmanager
-    def conn_context(self):
-        self.conn.row_factory = sqlite3.Row
-        yield self.conn
-        self.conn.close()
-
-    def get_data_from_sqlite(self, table):
+    def get_cursor_from_sqlite(self, table):
         curs = self.conn.cursor()
         curs.execute(f'SELECT * FROM {table};')
-        return curs.fetchall()
+        return curs
+
+    def get_batch_from_sqlite(self, curs):
+        """Получение части записей из SQLite."""
+        return curs.fetchmany(5000)

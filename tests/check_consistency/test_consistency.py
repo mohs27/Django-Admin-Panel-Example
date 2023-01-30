@@ -12,17 +12,26 @@ from sqlite_to_postgres.sqlite_extractor import SQLiteExtractor
 
 def connect_to_databases(table_sqlite, table_pg):
     """Соединение с постргресом и скулайт для получения всех данных."""
+    all_data_sq = []
+    all_data_from_pg = []
     dsl = {'dbname': 'movies_database', 'user': 'app', 'password': '123qwe', 'host': '127.0.0.1', 'port': 5432}
     with sqlite3.connect('sqlite_to_postgres/db.sqlite') as sqlite_conn, \
             psycopg2.connect(**dsl, cursor_factory=DictCursor) as pg_conn:
         sqlite_extractor = SQLiteExtractor(sqlite_conn)
         postgres_saver = PostgresSaver(pg_conn)
 
-        data_sq = sqlite_extractor.get_data_from_sqlite(table_sqlite)
+        curs = sqlite_extractor.get_cursor_from_sqlite(table_sqlite)
+        curs_pg = postgres_saver.get_cursor_from_postgres(table_pg)
+        while True:
+            data_sq = sqlite_extractor.get_batch_from_sqlite(curs)
+            all_data_sq.extend(data_sq)
 
-        data_from_pg = postgres_saver.get_data_from_postgres(table_pg)
+            data_from_pg = postgres_saver.get_batch_from_postgres(curs_pg)
+            all_data_from_pg.extend(data_from_pg)
+            if not data_sq or not data_from_pg:
+                break
 
-        return data_sq, data_from_pg
+        return all_data_sq, all_data_from_pg
 
 
 def test_records_count():
@@ -44,7 +53,6 @@ def test_consistency():
     ]
     for table in tables_sqlite:
         data_sq, data_from_pg = connect_to_databases(table_sqlite=table, table_pg='content.'+table)
-
         for record in range(0, len(data_sq)):
             for field in range(0, len(data_sq[record])):
                 if not isinstance(data_from_pg[record][field], datetime.date):

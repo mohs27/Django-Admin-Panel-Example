@@ -13,11 +13,9 @@ SECRET_KEY = os.environ.get('DJANGO_KEY')
 
 DEBUG = os.environ.get('DEBUG', False) == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = os.environ.get('WEBSITE_HOSTS').split(',')
 
-INTERNAL_IPS = [
-    '127.0.0.1',
-]
+INTERNAL_IPS = os.environ.get('INTERNAL_IPS').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
