@@ -2,6 +2,7 @@ import logging
 import os
 import sqlite3
 from contextlib import contextmanager
+from dataclasses import asdict, fields
 
 import psycopg2
 from dotenv import load_dotenv
@@ -9,6 +10,9 @@ from postgres_saver import PostgresSaver
 from psycopg2.extensions import connection as _connection
 from psycopg2.extras import DictCursor
 from sqlite_extractor import SQLiteExtractor
+
+from sqlite_to_postgres.data_structure import (FilmWork, Genre, GenreFilmWork,
+                                               Person, PersonFilmWork)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,38 +23,42 @@ dotenv_path = os.path.join(PARENT_DIR+'\\config\\', '.env')
 load_dotenv(dotenv_path)
 
 
+def class_from_args(class_name, arg_dict):
+    """Class from Args."""
+    field_set = {field.name for field in fields(class_name) if field.init}
+    filtered_arg_dict = {key: value for key, value in arg_dict.items() if key in field_set}
+    return class_name(**filtered_arg_dict)
+
+
 def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
     """Основной метод загрузки данных из SQLite в Postgres."""
-    tables_sqlite = [
-        'film_work', 'genre', 'person',
-        'genre_film_work', 'person_film_work',
-    ]
+    table_class = {
+        'film_work': FilmWork, 'genre': Genre, 'person': Person,
+        'genre_film_work': GenreFilmWork, 'person_film_work': PersonFilmWork,
+        }
+
     sqlite_extractor = SQLiteExtractor(connection)
     postgres_saver = PostgresSaver(pg_conn)
-    for table in tables_sqlite:
+    for table in table_class.keys():
+        logging.info(f"Table: {table}")
         postgres_saver.truncate_table(table)
         curs = sqlite_extractor.get_cursor_from_sqlite(table)
+
         while True:
             data = sqlite_extractor.get_batch_from_sqlite(curs)
-            if not data:
-                break
+            if data:
+                for item in data:
+                    movie = class_from_args(table_class[f"{table}"], dict(item))
+                    postgres_saver.save_data_to_postgres(movie, f"{table}")
             else:
-                if table == 'film_work':
-                    postgres_saver.save_film_work_to_postgres(data)
-                elif table == 'genre':
-                    postgres_saver.save_genre_to_postgres(data)
-                elif table == 'person':
-                    postgres_saver.save_person_to_postgres(data)
-                elif table == 'genre_film_work':
-                    postgres_saver.save_genre_film_work_to_postgres(data)
-                elif table == 'person_film_work':
-                    postgres_saver.save_person_film_work_to_postgres(data)
+                break
 
 
 @contextmanager
 def open_db(file_name: str):
     """Открытие соединения с базой данных SQLite."""
     conn = sqlite3.connect(file_name)
+    conn.row_factory = sqlite3.Row
     try:
         logging.info("Creating connection")
         yield conn

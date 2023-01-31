@@ -5,23 +5,23 @@ from datetime import datetime
 
 @dataclass(frozen=True)
 class FilmWork:
+    created: datetime
+    modified: datetime
     title: str
     description: str
     type: str
     creation_date: datetime
-    created: datetime
-    modified: datetime
     rating: float = field(default=0.0)
     id: uuid.UUID = field(default_factory=uuid.uuid4)
 
 
 @dataclass(frozen=True)
 class Genre:
+    created: datetime
+    modified: datetime
     id: uuid.UUID
     name: str
     description: str
-    created: datetime
-    modified: datetime
 
 
 @dataclass(frozen=True)
@@ -39,7 +39,7 @@ class PersonFilmWork:
     film_work_id: uuid.UUID
     person_id: uuid.UUID
     role: str
-    created_at: datetime
+    created: datetime
 
 
 @dataclass(frozen=True)
@@ -47,4 +47,4 @@ class GenreFilmWork:
     id: uuid.UUID
     film_work_id: uuid.UUID
     genre_id: uuid.UUID
-    created_at: datetime
+    created: datetime
