@@ -55,6 +55,8 @@ def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection) -> No
         logging.info(f"Table: {table}")
         postgres_saver.truncate_table(table)
 
+        sqlite_extractor.get_data_and_cursor_from_sqlite(table)
+
         while True:
             data = sqlite_extractor.get_batch_from_sqlite()
             if data:
@@ -69,13 +71,14 @@ def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection) -> No
                     )
                     data_keys = tuple(dictionary.keys())
                     prepared_data.append(tuple(dictionary.values()))
+
+                postgres_saver.save_data_to_postgres(
+                    tuple(prepared_data),
+                    data_keys,
+                    f"{table}",
+                )
             else:
                 break
-            postgres_saver.save_data_to_postgres(
-                tuple(prepared_data),
-                data_keys,
-                f"{table}",
-            )
 
 
 @contextmanager

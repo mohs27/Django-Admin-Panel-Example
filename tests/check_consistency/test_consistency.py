@@ -37,8 +37,9 @@ def connect_to_databases(table_sqlite: str, table_pg: str) -> tuple[list, list]:
         sqlite_extractor = SQLiteExtractor(sqlite_conn)
         postgres_saver = PostgresSaver(pg_conn)
 
-        sqlite_extractor.get_cursor_from_sqlite(table_sqlite)
+        sqlite_extractor.get_data_and_cursor_from_sqlite(table_sqlite)
         postgres_saver.get_cursor_from_postgres(table_pg)
+
         while True:
             data_sq = sqlite_extractor.get_batch_from_sqlite()
             all_data_sq.extend(data_sq)
@@ -48,7 +49,7 @@ def connect_to_databases(table_sqlite: str, table_pg: str) -> tuple[list, list]:
             if not data_sq or not data_from_pg:
                 break
 
-        return all_data_sq, all_data_from_pg
+    return all_data_sq, all_data_from_pg
 
 
 def test_records_count() -> None:

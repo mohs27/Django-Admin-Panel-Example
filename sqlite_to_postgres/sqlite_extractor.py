@@ -4,9 +4,9 @@ import sqlite3
 class SQLiteExtractor:
     def __init__(self, conn):
         self.conn = conn
-        self.curs = self.conn.cursor()
+        self.curs = conn.cursor()
 
-    def get_cursor_from_sqlite(self, table: str) -> sqlite3.Connection.cursor:
+    def get_data_and_cursor_from_sqlite(self, table: str) -> sqlite3.Connection.cursor:
         """Выбор всех данных из заблицы и возвращение курсора."""
         self.curs.execute(f"SELECT * FROM {table};")
         return self.curs
