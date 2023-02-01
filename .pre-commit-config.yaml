@@ -1,6 +1,24 @@
 repos:
 -   repo: local
     hooks:
+    -   id: pytest
+        name: pytest
+        entry: pytest
+        fail_fast: true
+        args: ["tests/check_consistency/"]
+        pass_filenames: false
+        language: python
+        types: [ python ]
+        stages: [ commit, push ]
+
+    -   id: black
+        name: black
+        description: black enforcement
+        entry: black
+        args: ["sqlite_to_postgres", "schema_design"]
+        language: python
+        types: [ python ]
+
     -   id: flake8
         name: flake8
         description: wemake-python-styleguide enforcement
@@ -8,3 +26,7 @@ repos:
         args: ["--config=setup.cfg"]
         language: python
         types: [python]
+
+
+
+
