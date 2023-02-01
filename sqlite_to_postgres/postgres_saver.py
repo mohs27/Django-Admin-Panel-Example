@@ -26,7 +26,7 @@ class PostgresSaver:
         execute_batch(cur=self.cursor, sql=query, argslist=data_vals, page_size=100)
         self.pg_conn.commit()
 
-    def get_cursor_from_postgres(self, table):
+    def get_cursor_from_postgres(self, table: str) -> connection.cursor:
         """Получение курсора из Postgres."""
         self.cursor.execute(f"SELECT * FROM {table};")
         return self.cursor

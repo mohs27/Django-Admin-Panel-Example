@@ -29,7 +29,7 @@ dotenv_path = os.path.join(PARENT_DIR + "\\config\\", ".env")
 load_dotenv(dotenv_path)
 
 
-def class_from_args(class_name: typing.ClassVar, arg_dict: dict):
+def class_from_args(class_name: typing.ClassVar, arg_dict: dict) -> typing.ClassVar:
     """Class from Args."""
     field_set = {field.name for field in fields(class_name) if field.init}
     filtered_arg_dict = {
