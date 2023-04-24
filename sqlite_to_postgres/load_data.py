@@ -97,15 +97,20 @@ def open_db(file_name: str):
 
 if __name__ == "__main__":
     dsl = {
-        "dbname": os.environ.get("DB_NAME"),
-        "user": os.environ.get("DB_USER"),
-        "password": os.environ.get("DB_PASSWORD"),
-        "host": os.environ.get("DB_HOST"),
-        "port": os.environ.get("DB_PORT"),
+        "dbname": os.environ.get("DB_NAME", default="movies_database"),
+        "user": os.environ.get("DB_USER", default="app"),
+        "password": os.environ.get("DB_PASSWORD", default="123qwe"),
+        "host": os.environ.get("DB_HOST", default="localhost"),
+        "port": os.environ.get("DB_PORT", default="5432"),
     }
     logging.basicConfig(level=logging.INFO)
 
-    with open_db(file_name=os.environ.get("SQLITE_PATH")) as sqlite_conn, closing(
+    with open_db(
+        file_name=os.environ.get(
+            "SQLITE_PATH",
+            default="db.sqlite",
+        )
+    ) as sqlite_conn, closing(
         psycopg2.connect(**dsl, cursor_factory=DictCursor),
     ) as pg_conn:
         try:
